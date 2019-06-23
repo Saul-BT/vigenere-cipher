@@ -5,6 +5,9 @@
  */
 package vigenere;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author tarod
@@ -29,22 +32,14 @@ public class Ventana extends javax.swing.JFrame {
      * @param clave
      * @param frase 
      */
-    private void comprobarEntrada(String clave, String frase) {
-        try {
-            String regexpVariasPalabras = "(?i)([A-Z]( +)?)+";
+    private void comprobarEntrada(String clave, String frase) throws ExcepcionDeEntrada {
+        String regexpVariasPalabras = "(?i)([A-Z]( +)?)+";
             
-            if (!clave.matches(regexpVariasPalabras))
-                throw new ExcepcionDeEntrada(ctClave, "La clave introducida no es correcta: "+regexpVariasPalabras);
+        if (!clave.matches(regexpVariasPalabras))
+            throw new ExcepcionDeEntrada(ctClave, "La clave introducida no es correcta: "+regexpVariasPalabras);
             
-            if (!frase.matches(regexpVariasPalabras))
-                throw new ExcepcionDeEntrada(areaTexto, "El texto introducido no es correcto: "+regexpVariasPalabras);
-        } catch (ExcepcionDeEntrada ex) {
-            javax.swing.JTextField campo = ((javax.swing.JTextField) ex.getComponente());
-            
-            campo.selectAll();
-            campo.requestFocus();
-            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage());
-        }
+        if (!frase.matches(regexpVariasPalabras))
+            throw new ExcepcionDeEntrada(areaTexto, "El texto introducido no es correcto: "+regexpVariasPalabras);
     }
 
     private void aplicarConfiguracionTablaVigenere() {
@@ -252,17 +247,31 @@ public class Ventana extends javax.swing.JFrame {
     private void bCifrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCifrarActionPerformed
         String clave = ctClave.getText();
         String frase = areaTexto.getText();
-        comprobarEntrada(clave, frase);
-        
-        areaResultado.setText(Vigenere.cifrar(clave, frase));
+        try {
+            comprobarEntrada(clave, frase);
+            areaResultado.setText(Vigenere.cifrar(clave, frase));
+        } catch (ExcepcionDeEntrada ex) {
+            javax.swing.text.JTextComponent campo = ((javax.swing.text.JTextComponent) ex.getComponente());
+            
+            campo.selectAll();
+            campo.requestFocus();
+            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
     }//GEN-LAST:event_bCifrarActionPerformed
 
     private void bDescifrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bDescifrarActionPerformed
         String clave = ctClave.getText();
         String frase = areaTexto.getText();
-        comprobarEntrada(clave, frase);
-
-        areaResultado.setText(Vigenere.descifrar(clave, frase));
+        try {
+            comprobarEntrada(clave, frase);
+            areaResultado.setText(Vigenere.descifrar(clave, frase));
+        } catch (ExcepcionDeEntrada ex) {
+            javax.swing.text.JTextComponent campo = ((javax.swing.text.JTextComponent) ex.getComponente());
+            
+            campo.selectAll();
+            campo.requestFocus();
+            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage());
+        }
     }//GEN-LAST:event_bDescifrarActionPerformed
 
     /**
